@@ -1,0 +1,99 @@
+:root {
+    --primary: #ff7b9c;
+    --bg: #f5f5f5;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--bg);
+    margin: 0;
+}
+
+.envelope-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background-color: var(--primary);
+}
+
+/* El sobre (triángulo de arriba) */
+.envelope::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    border-top: 100px solid #ff9db4;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    transform-origin: top;
+    transition: transform 0.5s ease;
+}
+
+.letter {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    width: 280px;
+    height: 180px;
+    background: white;
+    transition: transform 0.5s ease;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.text {
+    font-family: sans-serif;
+    color: #333;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* Animación al hacer click */
+.flap .envelope::before {
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.flap .letter {
+    transform: translateY(-100px);
+}
+
+.heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    background: #ff0000;
+    z-index: 3;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: transform 0.5s ease;
+}
+
+.heart::before, .heart::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #ff0000;
+    border-radius: 50%;
+}
+
+.heart::before { top: -15px; left: 0; }
+.heart::after { left: -15px; top: 0; }
+
+.flap .heart {
+    transform: translate(-50%, -50%) rotate(45deg) scale(0);
+}
