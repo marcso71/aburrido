@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para Ali</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Fuente elegante de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -12,18 +14,22 @@
             <div class="envelope">
                 <div class="letter">
                     <div class="text">
-                        <strong>Fuera depresión Ali</strong>
+                        <h1 class="letter-title">Para Ali</h1>
+                        <p class="letter-content">Fuera depresión</p>
+                        <p class="letter-content">Ánimo, siempre aquí.</p>
                     </div>
                 </div>
             </div>
-            <div class="heart"></div>
+            <!-- Sello de cera elegante para abrir -->
+            <div class="wax-seal"></div>
         </div>
     </div>
 
     <script>
         const envelope = document.querySelector('.envelope-wrapper');
+        // Escuchamos el clic en el envoltorio para abrir o cerrar
         envelope.addEventListener('click', () => {
-            envelope.classList.toggle('flap');
+            envelope.classList.toggle('flap-open');
         });
     </script>
 </body>

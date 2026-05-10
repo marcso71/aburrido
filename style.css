@@ -1,99 +1,164 @@
+/* Paleta de colores y variables */
 :root {
-    --primary: #ff7b9c;
-    --bg: #f5f5f5;
+    --bg-color: #f7e9e3; /* Fondo beige muy claro */
+    --envelope-color: #e0ac9a; /* Color sobre suave */
+    --flap-color: #d19a88; /* Color solapa ligeramente más oscuro */
+    --letter-bg: #fffdf5; /* Papel carta crema */
+    --text-color: #5c4033; /* Marrón oscuro para texto */
+    --seal-color: #b05e4b; /* Color sello de cera */
+    --shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: var(--bg);
-    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-color) 0%, #e8dad2 100%);
+    overflow: hidden;
 }
 
 .envelope-wrapper {
     position: relative;
+    width: 320px;
+    height: 220px;
     cursor: pointer;
+    perspective: 1000px; /* Necesario para la animación 3D de la solapa */
+    transition: transform 0.3s ease;
+}
+
+.envelope-wrapper:hover {
+    transform: translateY(-5px); /* Pequeño salto al pasar el mouse */
 }
 
 .envelope {
     position: relative;
-    width: 300px;
-    height: 200px;
-    background-color: var(--primary);
+    width: 100%;
+    height: 100%;
+    background-color: var(--envelope-color);
+    border-radius: 0 0 10px 10px;
+    box-shadow: var(--shadow);
+    z-index: 1;
+    overflow: visible; /* Permitir que la solapa y la carta salgan */
 }
 
-/* El sobre (triángulo de arriba) */
+/* Solapa del sobre (Triángulo superior) */
 .envelope::before {
     content: "";
     position: absolute;
     top: 0;
-    z-index: 2;
-    border-top: 100px solid #ff9db4;
-    border-left: 150px solid transparent;
-    border-right: 150px solid transparent;
+    left: 0;
+    width: 0;
+    height: 0;
+    z-index: 5;
+    border-top: 110px solid var(--flap-color);
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-radius: 5px 5px 0 0;
     transform-origin: top;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s ease-in-out, z-index 0.2s 0.3s;
+}
+
+/* Cara interior del sobre (para que no se vea vacío) */
+.envelope::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--envelope-color);
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
 }
 
 .letter {
     position: absolute;
-    bottom: 0;
-    left: 10px;
-    width: 280px;
-    height: 180px;
-    background: white;
-    transition: transform 0.5s ease;
-    z-index: 1;
+    bottom: 5px;
+    left: 15px;
+    width: 290px;
+    height: 200px;
+    background-color: var(--letter-bg);
+    border-radius: 5px;
+    padding: 25px;
+    z-index: 3;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.6s ease-in-out, z-index 0.6s;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.text {
-    font-family: sans-serif;
-    color: #333;
-    font-size: 1.2rem;
     text-align: center;
 }
 
-/* Animación al hacer click */
-.flap .envelope::before {
-    transform: rotateX(180deg);
-    z-index: 0;
+.text {
+    color: var(--text-color);
 }
 
-.flap .letter {
-    transform: translateY(-100px);
+.letter-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(92, 64, 51, 0.2);
+    padding-bottom: 5px;
 }
 
-.heart {
+.letter-content {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+/* Sello de cera (Círculo minimalista) */
+.wax-seal {
+    position: absolute;
+    top: 110px; /* Donde termina la solapa */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-color: var(--seal-color);
+    border-radius: 50%;
+    z-index: 6;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.5s ease-in-out, opacity 0.3s 0.2s;
+}
+
+/* Pequeño detalle visual dentro del sello */
+.wax-seal::after {
+    content: "A"; /* O cualquier inicial */
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 30px;
-    height: 30px;
-    background: #ff0000;
-    z-index: 3;
-    transform: translate(-50%, -50%) rotate(45deg);
-    transition: transform 0.5s ease;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
 }
 
-.heart::before, .heart::after {
-    content: "";
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: #ff0000;
-    border-radius: 50%;
+
+/* --- ESTADOS DE LA ANIMACIÓN (Al hacer clic) --- */
+
+/* 1. La solapa se abre hacia arriba (rota 180 deg) */
+.flap-open .envelope::before {
+    transform: rotateX(180deg);
+    z-index: 0; /* Pasa detrás de la carta */
 }
 
-.heart::before { top: -15px; left: 0; }
-.heart::after { left: -15px; top: 0; }
+/* 2. La carta sube */
+.flap-open .letter {
+    transform: translateY(-130px); /* Sube más para mostrarse bien */
+    z-index: 4; /* Pasa al frente de todo */
+}
 
-.flap .heart {
-    transform: translate(-50%, -50%) rotate(45deg) scale(0);
+/* 3. El sello desaparece */
+.flap-open .wax-seal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
 }
